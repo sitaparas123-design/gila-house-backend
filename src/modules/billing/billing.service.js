@@ -80,6 +80,45 @@ class BillingService {
     if (!bill) throw new Error('Bill not found for this reservation');
     return bill;
   }
+  async editBill(id, data = {}) {
+    const connection = await pool.getConnection();
+    await connection.beginTransaction();
+
+    try {
+      const bill = await billingModel.findOne('id = ?', [id]);
+      if (!bill) throw new Error('Bill not found');
+
+      const { total_charges, remaining_balance, billing_status, ...otherUpdates } = data;
+      
+      const updateData = { ...otherUpdates };
+      if (total_charges !== undefined) {
+        updateData.total_charges = Number(total_charges);
+        // Recalculate remaining balance
+        const paidAmount = Number(bill.paid_amount);
+        updateData.remaining_balance = Math.max(0, updateData.total_charges - paidAmount);
+        updateData.billing_status = updateData.remaining_balance <= 0 ? 'settled' : 'open';
+      }
+
+      await billingModel.update(id, updateData);
+      
+      await connection.commit();
+      return { success: true };
+    } catch (err) {
+      await connection.rollback();
+      throw err;
+    } finally {
+      connection.release();
+    }
+  }
+
+  async deleteBill(id) {
+    const bill = await billingModel.findOne('id = ?', [id]);
+    if (!bill) throw new Error('Bill not found');
+    
+    // Soft delete the bill
+    await billingModel.softDelete(id);
+    return { success: true };
+  }
 }
 
 module.exports = new BillingService();

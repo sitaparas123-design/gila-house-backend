@@ -65,6 +65,37 @@ class BillingController {
       });
     }
   }
+  async editBill(req, res) {
+    try {
+      const result = await billingService.editBill(req.params.id, req.body);
+      res.json({
+        success: true,
+        message: 'Bill updated successfully',
+        data: result
+      });
+    } catch (err) {
+      res.status(500).json({
+        success: false,
+        message: err.message
+      });
+    }
+  }
+
+  async deleteBill(req, res) {
+    try {
+      const result = await billingService.deleteBill(req.params.id);
+      res.json({
+        success: true,
+        message: 'Bill deleted successfully',
+        data: result
+      });
+    } catch (err) {
+      res.status(500).json({
+        success: false,
+        message: err.message
+      });
+    }
+  }
 }
 
 module.exports = new BillingController();

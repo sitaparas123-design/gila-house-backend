@@ -11,4 +11,7 @@ router.get('/', authorize('admin', 'manager', 'cashier', 'waiter', 'receptionist
 router.post('/:id/settle', authorize('admin', 'manager', 'cashier', 'receptionist'), billingController.settleBill);
 router.post('/:id/charges', authorize('admin', 'manager', 'cashier', 'waiter', 'receptionist'), billingController.addCharge);
 
+router.put('/:id', authorize('admin'), billingController.editBill);
+router.delete('/:id', authorize('admin'), billingController.deleteBill);
+
 module.exports = router;

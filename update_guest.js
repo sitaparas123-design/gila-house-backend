@@ -39,7 +39,7 @@ content = content.replace(
 
 content = content.replace(
   /\{item\.price\}/g,
-  `Rp {Number(item.price).toLocaleString()}`
+  `{formatCurrency(item.price)}`
 );
 
 content = content.replace(
@@ -63,7 +63,7 @@ content = content.replace(
 );
 content = content.replace(
   /<p className="text-lg font-black tracking-tight">Rp 120\.000<\/p>/g,
-  `<p className="text-lg font-black tracking-tight">Rp {cartTotal.toLocaleString()}</p>`
+  `<p className="text-lg font-black tracking-tight">{formatCurrency(cartTotal)}</p>`
 );
 
 // Cart Modal Open
@@ -87,7 +87,7 @@ content = content.replace(cartItemsRegex,
                         </div>
                         <div>
                           <h4 className="text-sm font-black text-slate-800">{item.name}</h4>
-                          <p className="text-[10px] font-bold text-gray-400 tracking-tight">Rp {Number(item.price).toLocaleString()} × {item.qty}</p>
+                          <p className="text-[10px] font-bold text-gray-400 tracking-tight">{formatCurrency(item.price)} × {item.qty}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-4">
@@ -100,7 +100,7 @@ content = content.replace(cartItemsRegex,
                             <Plus size={14} />
                           </button>
                         </div>
-                        <span className="text-sm font-black text-orange-500 tracking-tight">Rp {(item.price * item.qty).toLocaleString()}</span>
+                        <span className="text-sm font-black text-orange-500 tracking-tight">{formatCurrency(item.price * item.qty)}</span>
                       </div>
                     </div>
                   ))}
@@ -111,7 +111,7 @@ content = content.replace(cartItemsRegex,
 
 // Cart Modal Total
 const cartTotalRegex = /<span className="text-xl font-black text-orange-500 tracking-tighter">Rp 120\.000<\/span>/g;
-content = content.replace(cartTotalRegex, `<span className="text-xl font-black text-orange-500 tracking-tighter">Rp {(cartTotal * 1.11).toLocaleString()}</span>`);
+content = content.replace(cartTotalRegex, `<span className="text-xl font-black text-orange-500 tracking-tighter">{formatCurrency(cartTotal * 1.11)}</span>`);
 
 // Replace the Total label
 content = content.replace(/<span className="text-sm font-black text-slate-800">Total<\/span>/g, `<span className="text-sm font-black text-slate-800">Total (inc 11% tax)</span>`);
