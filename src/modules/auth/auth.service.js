@@ -257,7 +257,7 @@ class AuthService {
       reset_otp_expiry: expiry
     });
 
-    // Send email
+    // Send email asynchronously so we don't block the API response for 60+ seconds
     const subject = 'Password Reset OTP - Gila House POS';
     const html = `
       <div style="font-family: Arial, sans-serif; padding: 20px;">
@@ -270,10 +270,9 @@ class AuthService {
       </div>
     `;
 
-    const emailSent = await emailService.sendEmail(email, subject, html);
-    if (!emailSent) {
-      throw new Error('Failed to send OTP email');
-    }
+    emailService.sendEmail(email, subject, html).catch(err => {
+      console.error('Failed to send OTP email in background:', err);
+    });
 
     return true;
   }
