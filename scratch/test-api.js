@@ -1,0 +1,29 @@
+const https = require('https');
+
+const data = JSON.stringify({ email: 'sullereshrikant19@gmail.com' });
+
+const options = {
+  hostname: 'gila-house-backend-production-2e13.up.railway.app',
+  port: 443,
+  path: '/api/auth/forgot-password',
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Content-Length': data.length
+  }
+};
+
+const req = https.request(options, res => {
+  console.log(`statusCode: ${res.statusCode}`);
+
+  res.on('data', d => {
+    process.stdout.write(d);
+  });
+});
+
+req.on('error', error => {
+  console.error(error);
+});
+
+req.write(data);
+req.end();
